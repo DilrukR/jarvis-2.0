@@ -1,4 +1,6 @@
 import sys
+
+import PyPDF2
 import pyttsx3
 import speech_recognition as sr
 import datetime
@@ -24,7 +26,7 @@ def speak(audio):
 
 def wishme():
     hour = int(datetime.datetime.now().hour)
-    if hour >= 0 and hour < 12:
+    if 0 <= hour < 12:
         speak("Good Morning")
     elif hour <= 12 and hour < 18:
         speak("good afternoon")
@@ -33,13 +35,25 @@ def wishme():
 
     speak("I Am Jarvis sir. please tell me how me i help you")
 
+
 def pdf_reader():
-    book = open()
+    book = open('D:\\Campus lectures\\Second Year\\Information System Management\\Chapter 01 MIS Student version.pdf',
+                'rb')
+    pdfReader = PyPDF2.PdfFileReader(book)
+    pages = pdfReader.numPages
+    speak(f"Total number of pages in this book {pages}")
+    speak("sir please enter the page number i have to read")
+    pg = int(input("Please enter the page number..."))
+    page = pdfReader.getPage(pg)
+    text = page.extractText()
+    speak(text)
+
+
 def takeCommand():
     # it takes microphone input from user and returns string outputs
     r = sr.Recognizer()
     with sr.Microphone() as source:
-        print("Listning....")
+        print("Listening....")
         r.pause_threshold = 1
         audio = r.listen(source)
     try:
@@ -53,8 +67,9 @@ def takeCommand():
     return query
 
 
-if __name__ == "__main__":
+def taskExecution():
     wishme()
+
     while True:
         query = takeCommand().lower()
 
@@ -66,32 +81,29 @@ if __name__ == "__main__":
             speak("According to wikipeadia")
             print(results)
             speak(results)
+            speak("do you have any other work me to do")
 
         elif 'open youtube' in query:
             webbrowser.open("youtube.com")
-
+            speak("do you have any other work me to do")
 
         elif 'play some music' in query:
             music_dir = "E:\\music\\english"
             songs = os.listdir(music_dir)
             print(songs)
             os.startfile(os.path.join(music_dir, songs[9]))
+            speak("do you have any other work me to do")
 
         elif 'tv series hello' in query:
             halo_dir = "E:\\tv series\\Halo"
             hs = os.listdir(halo_dir)
             os.startfile(os.path.join(halo_dir, hs[1]))
+            speak("do you have any other work me to do")
 
         elif 'what is the time' in query:
             startTime = datetime.datetime.now().strftime("%H:%M")
             speak(f"Sir,the time is{startTime}")
-
-
-        elif 'who is doll' in query:
-            speak("ruchini gimhara mediwaka is your life")
-
-        elif 'wolf' in query:
-            wolf = webbrowser.open('wolframalpha.com')
+            speak("do you have any other work me to do")
 
         elif 'how much power left' in query:
             battery = psutil.sensors_battery()
@@ -107,6 +119,29 @@ if __name__ == "__main__":
             speak(f"sir you have {dl} bit per second download speed and {ul} per second upload speed ")
             speak("do you have any other work me to do")
 
+        elif 'read book' in query:
+            pdf_reader()
+
+        elif 'how are you' in query:
+            speak("i am fine sir , how about you?")
+        elif 'i am fine' in query:
+            speak("awesome")
+            speak("do you have any work me to do sir")
+
+        elif 'go sleep' in query:
+            speak('okay sir i am going to sleep but you can call me anytime')
+            break
+
         elif 'no thanks' in query:
             speak("thanks for using me sir, have a good day")
+            sys.exit()
+
+
+if __name__ == "__main__":
+
+    while True:
+        permission = takeCommand()
+        if "wake up" in permission:
+            taskExecution()
+        elif "goodbye" in permission:
             sys.exit()
