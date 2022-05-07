@@ -1,5 +1,4 @@
 import sys
-
 import PyPDF2
 import pyttsx3
 import speech_recognition as sr
@@ -10,6 +9,7 @@ import os
 import wolframalpha
 import psutil
 import speedtest
+import requests
 
 client = wolframalpha.Client('TW8HXV-5U4YAY9EEA')
 
@@ -34,6 +34,10 @@ def wishme():
         speak("Good Evening")
 
     speak("I Am Jarvis sir. please tell me how me i help you")
+
+
+def anyother():
+    speak("do you have any other work me to do")
 
 
 def pdf_reader():
@@ -67,9 +71,31 @@ def takeCommand():
     return query
 
 
-def taskExecution():
-    wishme()
+def Weather_focast():
+    speak('please tell me the location sir')
 
+    location = takeCommand().lower()
+    Api = 'ab49e8a59d02773c9610b303501f43e0'
+
+    api_link = f"https://api.openweathermap.org/data/2.5/weather?q={location}&appid={Api}"
+
+    api_req = requests.get(api_link)
+    api_data = api_req.json()
+
+    if api_data['cod'] == '404':
+        speak("city is not clear sir please enter it again")
+
+    else:
+        temp_city = ((api_data['main']['temp']) - 273.15)
+
+        weather_desc = api_data['weather'][0]['description']
+
+        print(f"{location}'s Temperature is {temp_city} celcious and weather mostly like {weather_desc}")
+
+        speak(f"{location}'s Temperature is {temp_city} celcious and weather mostly like {weather_desc}")
+
+
+def taskExecution():
     while True:
         query = takeCommand().lower()
 
@@ -91,8 +117,10 @@ def taskExecution():
             music_dir = "E:\\music\\english"
             songs = os.listdir(music_dir)
             print(songs)
-            os.startfile(os.path.join(music_dir, songs[9]))
+            os.startfile(os.path.join(music_dir, songs[0]))
             speak("do you have any other work me to do")
+
+        #     elif 'namaste' in query: I make this for
 
         elif 'tv series hello' in query:
             halo_dir = "E:\\tv series\\Halo"
@@ -103,13 +131,13 @@ def taskExecution():
         elif 'what is the time' in query:
             startTime = datetime.datetime.now().strftime("%H:%M")
             speak(f"Sir,the time is{startTime}")
-            speak("do you have any other work me to do")
+            anyother()
 
         elif 'how much power left' in query:
             battery = psutil.sensors_battery()
             percentage = battery.percent
             speak(f"Sir your system has {percentage} percent battery")
-            speak("do you have any other work me to do")
+            anyother()
 
         elif 'internet speed' in query:
 
@@ -117,13 +145,17 @@ def taskExecution():
             dl = st.download()
             ul = st.upload()
             speak(f"sir you have {dl} bit per second download speed and {ul} per second upload speed ")
-            speak("do you have any other work me to do")
 
         elif 'read book' in query:
             pdf_reader()
 
+        elif 'weather' in query:
+
+            Weather_focast()
+
         elif 'how are you' in query:
             speak("i am fine sir , how about you?")
+
         elif 'i am fine' in query:
             speak("awesome")
             speak("do you have any work me to do sir")
@@ -142,6 +174,7 @@ if __name__ == "__main__":
     while True:
         permission = takeCommand()
         if "wake up" in permission:
+            wishme()
             taskExecution()
         elif "goodbye" in permission:
             sys.exit()
