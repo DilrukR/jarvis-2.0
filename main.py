@@ -10,8 +10,11 @@ import wolframalpha
 import psutil
 import speedtest
 import requests
+import PySimpleGUI as sg
 
 client = wolframalpha.Client('TW8HXV-5U4YAY9EEA')
+
+sg.Window(title="hello world", layout=[[]],margins=(100,50)).read()
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -94,6 +97,18 @@ def Weather_focast():
 
         speak(f"{location}'s Temperature is {temp_city} celcious and weather mostly like {weather_desc}")
 
+def wishme():
+    hour = int(datetime.datetime.now().hour)
+
+    if 0 <= hour < 12:
+        speak("Good Morning")
+
+    elif hour <= 12 and hour < 18:
+        speak("good afternoon")
+    else:
+        speak("Good Evening")
+
+    speak("I Am Jarvis sir. please tell me how me i help you")
 
 def taskExecution():
     while True:
