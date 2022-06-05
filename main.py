@@ -137,14 +137,10 @@ def taskExecution():
 
         #     elif 'namaste' in query: I make this for
 
-        elif 'tv series hello' in query:
-            halo_dir = "E:\\tv series\\Halo"
-            hs = os.listdir(halo_dir)
-            os.startfile(os.path.join(halo_dir, hs[1]))
-            speak("do you have any other work me to do")
+        
 
         elif 'what is the time' in query:
-            startTime = datetime.datetime.now().strftime("%H:%M")
+            startTime = datetime.datetime.now().strftime("%H%M")
             speak(f"Sir,the time is{startTime}")
             anyother()
 
