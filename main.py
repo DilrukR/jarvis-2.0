@@ -14,7 +14,7 @@ import PySimpleGUI as sg
 
 client = wolframalpha.Client('TW8HXV-5U4YAY9EEA')
 
-sg.Window(title="hello world", layout=[[]],margins=(100,50)).read()
+
 
 engine = pyttsx3.init('sapi5')
 voices = engine.getProperty('voices')
@@ -152,6 +152,8 @@ def taskExecution():
 
         elif 'internet speed' in query:
 
+            speak(f"please wait sir i will chek it")
+
             st = speedtest.Speedtest()
             dl = st.download()
             ul = st.upload()
@@ -178,6 +180,8 @@ def taskExecution():
         elif 'no thanks' in query:
             speak("thanks for using me sir, have a good day")
             sys.exit()
+
+
 
 
 if __name__ == "__main__":
